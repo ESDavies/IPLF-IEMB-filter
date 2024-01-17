@@ -35,27 +35,13 @@ nmc=100; % Number of Monte Carlo Loops
 [X_truth] = Trajectory_cross(Nsteps, F, numtruth, Q, Area);
 
 % Makes sure the target trajectories are contained within the surveillence region
-[X_truth,m_b,t_birth,t_death,targetLeg] = Trajectory_region(X_truth,numtruth,Nsteps);
-figure(1)
-hold on
-plot(sensor_pos(1,:),sensor_pos(2,:),'.k','Markersize',4)
-targetLeg=cat(1,targetLeg,"Target Birth","Sensor Position");
-legend(targetLeg);
-% legend(targetLeg,'Location','southeast');
-
-% saveas(figure(1),'Trajectories\Trajectories_with_birth.fig')
-% saveas(figure(1),'Trajectories\Trajectories_with_birth.png')
-% saveas(figure(1),'Trajectories\Trajectories_with_birth.pdf','pdf')
-% saveas(figure(1),'Trajectories\Trajectories_with_birth.esp','epsc')
+[X_truth,m_b,t_birth,t_death] = Trajectory_region(X_truth,numtruth,Nsteps);
 
 %Round numbers. Easier to explain
 
-m_b=[75,0,100,0;...
-    20,0,105,0;...
-    110,0,50,0;...
-    110,0,85,0]';
+m_b=[60,0,60,0]';
 
-P_b=diag([10 10 10 10]);
+P_b=diag([1000 10 1000 10]);
 
 
 P_ini=repmat(P_b,1,1,numtruth);
@@ -304,7 +290,7 @@ ylabel('RMS GOSPA missed target error')
 legend(leg,'Location','northwest')
 set(gca,'FontSize',15) 
 
-save('Workspace')
+save('WorkspaceBB')
 
 writematrix([...
     "Filter",    "Error tot",            "Error loc.",               "Error Fal.",                 "Error Mis.";...
@@ -314,12 +300,12 @@ writematrix([...
     "IEMB-EKF",  ekf_rms_gospa_tot,      ekf_rms_gospa_loc_tot,      ekf_rms_gospa_false_tot,      ekf_rms_gospa_mis_tot;...
     "IMB-IPLF",  imb_iplf_rms_gospa_tot, imb_iplf_rms_gospa_loc_tot, imb_iplf_rms_gospa_false_tot, imb_iplf_rms_gospa_mis_tot;...
     "IMB-UKF",   imb_ukf_rms_gospa_tot,  imb_ukf_rms_gospa_loc_tot,  imb_ukf_rms_gospa_false_tot,  imb_ukf_rms_gospa_mis_tot;...
-],'Results Table.csv',"WriteMode","append");   
+],'Results TableBB.csv',"WriteMode","append");   
 
 b=["total" "localisation" "false" "missed"];
 for i=1:4
-    saveas(figure(i),'Graphs\'+b(i)+'.fig')
-    saveas(figure(i),'Graphs\'+b(i)+'.png')
-    saveas(figure(i),'Graphs\'+b(i)+'.pdf','pdf')
-    saveas(figure(i),'Graphs\'+b(i)+'.esp','epsc')
+    saveas(figure(i),'GraphsBB\'+b(i)+'.fig')
+    saveas(figure(i),'GraphsBB\'+b(i)+'.png')
+    saveas(figure(i),'GraphsBB\'+b(i)+'.pdf','pdf')
+    saveas(figure(i),'GraphsBB\'+b(i)+'.esp','epsc')
 end
